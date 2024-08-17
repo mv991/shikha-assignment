@@ -5,7 +5,7 @@ import { collection, query, where, getDocs ,doc,deleteDoc} from 'firebase/firest
 import { useAuth } from '@/AuthContext';
 import Card from '../components/Card';
 
-const page = () => {
+const WishListPage = () => {
     const {user} = useAuth();
     const [wishlistData,setWishlistData] = useState<any>([]);
     const [loading,setLoading] = useState(true);
@@ -58,4 +58,4 @@ const page = () => {
   )
 }
 
-export default page
+export default WishListPage
