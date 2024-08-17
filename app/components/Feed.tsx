@@ -2,7 +2,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import InfiniteScroll from 'react-infinite-scroller';
-import { db, collection, addDoc } from '../../firebaseConfig';
+import { db, collection, addDoc ,} from '../../firebaseConfig';
+import {query,where,getDocs} from "firebase/firestore";
+
 import { useAuth } from '../..//AuthContext';
 import Image from 'next/image';
 import Card from './Card';
@@ -12,27 +14,35 @@ const [dataLoading,setDataLoading] = useState(false);
 const {user,loading} = useAuth();
 
 const pageRef = useRef(1);
-const [error, setError] = useState<string | null>(null);
 const handleClick = async (data:any) => {
     if (!data) {
       return;
     }
 
     setDataLoading(true);
-    setError(null);
+
 
     try {
+      const q = query(collection(db, 'wishlist'), where("id", "==", data.id), where("userId", "==", user?.uid));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+          alert("Item is already in your Wishlist");
+          return true;
+      }
       const docRef = await addDoc(collection(db, 'wishlist'), {
         data,
         userId:user?.uid,
         timestamp: new Date(),
         id:data.id
       });
-      console.log('Document written with ID: ', docRef.id);
- // Clear the input after successful submission
+      alert("Item added to Wishlist")
+      return true
+
     } catch (e) {
-      console.error('Error adding document: ', e);
-      setError('Error adding document');
+     
+      alert('Error adding to Wishlist');
+      return false
     } finally {
       setDataLoading(false);
     }
@@ -63,7 +73,16 @@ useEffect(() => {
        hasMore={true}
        loader={<div className="loader" key={0}>Loading ...</div>}
    >
-         <div className='flex gap-4 flex-wrap p-12 justify-center'>  {data.map(((tvShow:any,index:number) => <Card key={index} show={tvShow} handleClick={handleClick} buttonText={"Add to Wishlist"}/>))}</div>
+         <div className='flex gap-4 flex-wrap p-12 justify-center'>  {data.map(((tvShow:any,index:number) => {
+
+         
+           return <Card  show={tvShow} handleClick={handleClick} buttonText={"Add to Wishlist"}  key={tvShow.id} />
+          
+          
+          }
+          ))}
+        
+           </div>
      </InfiniteScroll>
    
     ):"Loading..."}

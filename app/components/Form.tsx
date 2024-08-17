@@ -11,8 +11,8 @@ const Form = () => {
         router.push("/tvShows")
     }
   return (
-    <div>
-       <button type='submit' onClick={() => loginWithGoogle()}>Log in With Google</button>
+    <div className='w-full h-screen justify-center items-center flex'>
+       <button type='submit' onClick={() => loginWithGoogle()} className='px-6 py-2 rounded-md bg-black text-white'>Log in With Google</button>
     </div>
   )
 }
