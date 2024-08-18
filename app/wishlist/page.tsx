@@ -52,7 +52,7 @@ const WishListPage = () => {
 
   return (
     <div className='w-screen h-screen overflow-x-hidden justify-center p-12 flex flex-wrap gap-6'>
-        {wishlistData?.map((wishItem:any,index:number) => <Card  show={wishItem} handleClick={deleteItemById} key={index} buttonText={"Remove from Whishlist"}/>)}
+        {wishlistData?.map((wishItem:any,index:number) => <Card  show={wishItem} handleClick={deleteItemById} key={wishItem.id} buttonText={"Remove from Whishlist"}/>)}
         { wishlistData.length===0 && !loading && <h1>You have no Shows in your Wishlist</h1>}
     </div>
   )
